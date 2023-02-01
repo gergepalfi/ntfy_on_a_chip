@@ -21,7 +21,7 @@
 #define ssid ""
 #define password ""
 String serverName = "https://ntfy.sh/gerge_test";
-#define base64_login "" //If you have access control use the following command to generate it in terminal: echo -n 'user:pass' | base64
+//#define base64_login "" //If you have access control use the following command to generate it in terminal: echo -n 'user:pass' | base64
 #define getinterval 10000
 
 //Root certificate for HTTPS

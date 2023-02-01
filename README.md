@@ -3,9 +3,18 @@ ESP8266 and ESP32 client code to communicate with NTFY.sh server
 
 This code is meant to be a basic example or starting point for using NTFY with ESP boards. Turning the on-board LED on/off is not very useful unless it is expanded with a relay to control something. The basic 2 way communication is all there so it can be used for much more complex tasks.
 
+# What is this code for?
+
+This code allows a person to safely connect an ESP device to the internet and control it from anywhere. It does not require a private server, MQTT broker, port forwarding or any other "advanced" networking. This also means that people behind a NAT (shared public IP) can use it.
+
+https://ntfy.sh is free and open source, ideal for a maker to just get things working.
+
+# Private vs Public
+If you run a private ntfy instance or have a private sponsor account on ntfy.sh you can set username and password protection on the channel. In the public channels you need to choose a complex topic name (essentially the topic name is your password).
+
 # Features:
-coming soon - HTTPS using Root certificate (code will work for at least a few years without recompile)
-- username/password login for private servers that have this feature enabled
+- HTTPS using Root certificate (certs have around 20 year lifespan)
+- username/password login (for private servers and supporters with accounts on ntfy.sh)
 - listen for incoming commands on a topic (simply "0" or "1" for this example)
 - execute something based on commands (turn LED on/off in this case)
 - send a reply message
@@ -41,6 +50,8 @@ Do not mix up LittleFS with SPIFFS. I made that mistake so you don't have to. SP
 LittleFS tool install: https://microcontrollerslab.com/littlefs-introduction-install-esp8266-nodemcu-filesystem-uploader-arduino/
 
 The ESP has flash memory (4MB in my case), you can select how much of that will be reserved for LittleFS with the tools > Flash Size tab. I use `4MB (FS:2MB OTA:~1019KB)`
+
+The code (first part of flash) and the LittleFS certificates (second part of flash) can be uploaded separately, order does not matter.
 
 # Code Functionality Note
 The information is requested from the server based on UNIX time (poll every X seconds). If multiple messages arrived in that interval, all messages are processed in order, then the state is applied. (Example: the LED state is off. You send a message `1` followed by a message `0`. The board will process these two at the next poll and apply state 0. The LED will never turn on as the command was immediately overruled by the next message in the que)
