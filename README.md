@@ -1,4 +1,4 @@
-# <span style="color: #58bd8b;">**ntfy**</span> on a Chip: Easy <span style="color: #58bd8b;">**ntfy**</span> Integration for ESP Devices
+# **ntfy** on a Chip: Easy **ntfy** Integration for ESP Devices
 
 ESP8266 and ESP32 client code to communicate with the [NTFY.sh](https://ntfy.sh) server.
 
