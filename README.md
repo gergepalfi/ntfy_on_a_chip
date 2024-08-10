@@ -62,7 +62,7 @@ The `Feline Watchdog` project showcases a practical application of this code:
   - **Notification System**: Sends alerts when the ESP32 device goes out of range.
   - **Power Supply**: Primarily powered by a Li-ion battery for the collar-mounted ESP32. USB power is used only for reprogramming.
 
-- **Repository**: [Feline Watchdog Repository](https://github.com/YourUsername/FelineWatchdog)
+- **Repository**: [Feline Watchdog Repository](https://github.com/k-antoniou/FelineWatchdog)
 
 The `Feline Watchdog` project demonstrates how to utilize the `ntfy_on_a_chip` example code to build a real-world application. It integrates with the **ntfy** service to provide practical alerts for pet owners.
 
