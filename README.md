@@ -1,57 +1,92 @@
 # ntfy_on_a_chip
-ESP8266 and ESP32 client code to communicate with NTFY.sh server
+ESP8266 and ESP32 client code to interact with the [ntfy.sh](https://ntfy.sh) server, enabling remote communication and control.
 
-This code is meant to be a basic example or starting point for using NTFY with ESP boards. Turning the on-board LED on/off is not very useful unless it is expanded with a relay to control something. The basic 2 way communication is all there so it can be used for much more complex tasks.
+## 🎯 Purpose
 
-# What is this code for?
-
-This code allows a person to safely connect an ESP device to the internet and control it from anywhere. It does not require a private server, MQTT broker, port forwarding or any other "advanced" networking. This also means that people behind a NAT (shared public IP) can use it.
+This code provides a foundational example for integrating **ntfy** with ESP devices, enabling remote control over the internet. It eliminates the need for private servers, MQTT brokers, or port forwarding, making it accessible even for users behind NAT (shared public IP) networks. hile the example demonstrates controlling an on-board LED, it can be expanded for more complex applications, such as using relays to control other devices. 
 
 https://ntfy.sh is free and open source, ideal for a maker to just get things working.
 
-# Private vs Public
-If you run a private ntfy instance or have a private sponsor account on ntfy.sh you can set username and password protection on the channel. In the public channels you need to choose a complex topic name (essentially the topic name is your password).
+## 🔐 Private vs Public Channels
 
-# Features:
-- HTTPS using Root certificate (certs have around 20 year lifespan)
-- username/password login (for private servers and supporters with accounts on ntfy.sh)
-- listen for incoming commands on a topic (simply "0" or "1" for this example)
-- execute something based on commands (turn LED on/off in this case)
-- send a reply message
+- **Private Channels**: If you are using a private ntfy instance or a sponsor account, you can set username and password protection for your channel.
+- **Public Channels**: For public channels, ensure your topic name is complex and acts as a password.
 
-# Get Root Certificate (ESP32)
-Firefox
-1) open the website (ntfy.sh or your own private ntfy server URL)
-2) click the lock in the URL bar > connection secure > more information
-3) In the new pop-up window select secutity tab > view certificate
-4) This will open a tab with the certificates. On top select the root CA (right side)
-Note that the root certificate is valid for around 20 years, the code will not need recompiling until the certificate expires.
-5) Find the section Miscellaneous and download `PEM (cert)`
+## 🚀 Features
 
-Chrome: https://techtutorialsx.com/2017/11/18/esp32-arduino-https-get-request/
+- **HTTPS Support**: Secure communication using a Root certificate.
+- **Authentication**: Username/password for private servers and sponsor accounts.
+- **Command Handling**: Listen for commands and execute actions (e.g., turn LED on/off).
+- **Response**: Send a reply message to the server.
 
-You should have a `myurl.pem` file that contains the root cert:
-```
------BEGIN CERTIFICATE-----
-MIIFazCCA1OgAwIBAgIRAIIQz7DSQONZRGPgu2OCiwAwDQYJKoZIhvcNAQELBQAw
-...
-emyPxgcYxn/eR44/KJ4EBs+lVDR3veyJm+kXQ99b21/+jh5Xos1AnX5iItreGCc=
------END CERTIFICATE-----
-```
-For ESP32 the content of this file can be pasted directly into the code.
+## 🛠️ Getting Started
 
-# Get Certificate Store (ESP8266)
-The ESP8266 board library already has the `ESP8266WiFi/examples/BearSSL_CertStore/certs-from-mozilla.py`, but it is not visible within Arduino IDE.
+### 🗝️ Obtaining the Root Certificate (ESP32)
 
-Open the folder `~/.arduino15/packages/esp8266/hardware/esp8266/3.1.1/libraries/ESP8266WiFi/examples/BearSSL_CertStore`, copy the python script to your project and run `python3 certs-from-mozilla.py`. It will create the necessary data folder with the `certs.ar` file that will be uploaded.
+1. **Using Firefox**:
+   - Open the **ntfy.sh** website or your private ntfy server URL.
+   - Click the lock icon in the URL bar, then select "Connection secure" > "More information."
+   - In the new window, go to the "Security" tab and click "View Certificate."
+   - Select the root CA certificate and download it in PEM format.
+   - You should have a file named `myurl.pem` that contains the root certificate. It will look similar to the following:
 
-Do not mix up LittleFS with SPIFFS. I made that mistake so you don't have to. SPIFFS is no longer supported and can be considered dead.
+     ```
+     -----BEGIN CERTIFICATE-----
+     MIIFazCCA1OgAwIBAgIRAIIQz7DSQONZRGPgu2OCiwAwDQYJKoZIhvcNAQELBQAw
+     ...
+     emyPxgcYxn/eR44/KJ4EBs+lVDR3veyJm+kXQ99b21/+jh5Xos1AnX5iItreGCc=
+     -----END CERTIFICATE-----
+     ```
 
-LittleFS tool install: https://microcontrollerslab.com/littlefs-introduction-install-esp8266-nodemcu-filesystem-uploader-arduino/
+2. **Using Chrome**: Follow this [TechTutorialsX Guide](https://techtutorialsx.com/2017/11/18/esp32-arduino-https-get-request/) to obtain the root certificate. Save it as `myurl.pem` and use its content in your code.
 
-The ESP has flash memory (4MB in my case), you can select how much of that will be reserved for LittleFS with the tools > Flash Size tab. I use `4MB (FS:2MB OTA:~1019KB)`
+### 🗝️ Certificate Store (ESP8266)
 
-The code (first part of flash) and the LittleFS certificates (second part of flash) can be uploaded separately, order does not matter.
+1. **Generate Certificate Store**:
+   - Locate the `certs-from-mozilla.py` script within the ESP8266 library folder. The path typically is:
+     ```
+     ~/.arduino15/packages/esp8266/hardware/esp8266/3.1.1/libraries/ESP8266WiFi/examples/BearSSL_CertStore
+     ```
+   - Copy `certs-from-mozilla.py` to your project directory.
+   - Run the script using Python 3 to generate the necessary certificate store file (`certs.ar`):
+     ```sh
+     python3 certs-from-mozilla.py
+     ```
+   - The generated `certs.ar` file should be uploaded to the ESP8266.
 
-# Code Functionality Note
-The information is requested from the server based on UNIX time (poll every X seconds). If multiple messages arrived in that interval, all messages are processed in order, then the state is applied. (Example: the LED state is off. You send a message `1` followed by a message `0`. The board will process these two at the next poll and apply state 0. The LED will never turn on as the command was immediately overruled by the next message in the que)
+2. **LittleFS vs. SPIFFS**:
+   - **LittleFS** is the preferred filesystem for ESP8266. Avoid using SPIFFS as it is deprecated.
+   - **LittleFS Tool Installation**: [Guide](https://microcontrollerslab.com/littlefs-introduction-install-esp8266-nodemcu-filesystem-uploader-arduino/)
+
+### 📈 Flash Layout
+
+For ESP8266, configure the flash memory as follows:
+   - **Total Flash Size**: 4MB
+   - **LittleFS Size**: 2MB
+   - **OTA (Over-the-Air) Size**: ~1019KB
+
+This layout ensures you have enough space for both the code and filesystem.
+
+### ⏳ Certificate Lifespan
+
+The root certificate is valid for around **20 years**, so you will not need to update the certificate frequently. This long validity period means that code recompilation will not be necessary until the certificate expires.
+
+### 📜 Functionality with Piled-Up Messages
+
+The ESP devices poll the server at regular intervals based on UNIX time. Messages are processed in the order they are received, and the latest message determines the final state. For instance, if multiple commands are received (e.g., `1` followed by `0`), the board processes these messages sequentially and applies the final command.
+
+## Example Project: 🐱 Feline Watchdog
+
+The [Feline Watchdog](https://github.com/k-antoniou/FelineWatchdog) project demonstrates a practical application of this code:
+
+- **Overview**: Monitors the Wi-Fi connection of a collar-mounted ESP32 and sends notifications if the device goes out of range.
+
+## 🤝 Contributing
+
+Contributions are welcome! Please submit pull requests or open issues if you encounter any problems.
+
+## 📜 License
+
+This project is licensed under the [GPLv3 License](https://opensource.org/licenses/GPL-3.0) - see the [LICENSE](LICENSE) file for details.
+
+**Thank you for exploring the NTFY on a Chip project!** ✨
