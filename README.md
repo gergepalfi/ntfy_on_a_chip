@@ -3,7 +3,7 @@ ESP8266 and ESP32 client code to interact with the [ntfy.sh](https://ntfy.sh) se
 
 ## 🎯 Purpose
 
-This code provides a foundational example for integrating **ntfy** with ESP devices, enabling remote control over the internet. It eliminates the need for private servers, MQTT brokers, or port forwarding, making it accessible even for users behind NAT (shared public IP) networks. hile the example demonstrates controlling an on-board LED, it can be expanded for more complex applications, such as using relays to control other devices. 
+This code provides a foundational example for integrating **ntfy** with ESP devices, enabling remote control over the internet. It eliminates the need for private servers, MQTT brokers, or port forwarding, making it accessible even for users behind NAT (shared public IP) networks. While the example demonstrates controlling an on-board LED, it can be expanded for more complex applications, such as using relays to control other devices. 
 
 https://ntfy.sh is free and open source, ideal for a maker to just get things working.
 
